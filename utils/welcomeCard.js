@@ -14,88 +14,76 @@ module.exports = async (member) => {
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-// =========================
-// Avatar
-// =========================
+    // =========================
+    // Avatar
+    // =========================
+    const avatar = await loadImage(
+        member.user.displayAvatarURL({
+            extension: "png",
+            size: 1024,
+            forceStatic: true,
+        })
+    );
 
-const avatar = await loadImage(
-    member.user.displayAvatarURL({
-        extension: "png",
-        size: 1024,
-        forceStatic: true
-    })
-);
+    const centerX = 1200;
+    const centerY = 507;
+    const radius = 208;
 
-const centerX = 1200;
-const centerY = 507;
-const radius = 208;
-ctx.save();
+    ctx.save();
 
-ctx.beginPath();
-ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-ctx.closePath();
-ctx.clip();
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
 
-// Cover (بدون تمديد)
-const scale = Math.max(
-    (radius * 2) / avatar.width,
-    (radius * 2) / avatar.height
-);
+    const scale = Math.max(
+        (radius * 2) / avatar.width,
+        (radius * 2) / avatar.height
+    );
 
-const width = avatar.width * scale;
-const height = avatar.height * scale;
+    const width = avatar.width * scale;
+    const height = avatar.height * scale;
 
-ctx.drawImage(
-    avatar,
-    centerX - width / 2,
-    centerY - height / 2,
-    width,
-    height
-);
+    ctx.drawImage(
+        avatar,
+        centerX - width / 2,
+        centerY - height / 2,
+        width,
+        height
+    );
 
-ctx.restore();
-ctx.restore();
-ctx.restore();
-ctx.restore();
-ctx.restore();
-ctx.restore();
-ctx.restore();
+    ctx.restore();
+
     // =========================
     // Text Style
     // =========================
     ctx.fillStyle = "#FFFFFF";
-    ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.shadowColor = "#A020F0";
-    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#9b4dff";
+    ctx.shadowBlur = 18;
+
+    // خط افتراضي يدعم العربي والإنجليزي إذا كان متوفراً
+    const FONT = 'sans-serif';
 
     // =========================
     // MEMBER
     // =========================
-    ctx.font = "bold 28px Arial";
-    ctx.fillText(
-        member.user.username,
-        185,
-        500
-    );
+    ctx.textAlign = "left";
+    ctx.font = `bold 30px ${FONT}`;
+
+    const username =
+        member.displayName || member.user.globalName || member.user.username;
+
+    ctx.fillText(username, 185, 500);
 
     // =========================
     // ACCOUNT CREATED
     // =========================
-    ctx.font = "28px Arial";
+    ctx.font = `28px ${FONT}`;
     ctx.fillText(
         member.user.createdAt.toLocaleDateString("en-GB"),
         595,
         500
-    );
-
-// =========================
-    // INVITED BY
-    // =========================
-    ctx.fillText(
-        "Fawaz",
-        185,
-        840
     );
 
     // =========================
@@ -117,9 +105,18 @@ ctx.restore();
     );
 
     // =========================
+    // INVITED BY
+    // =========================
+    ctx.fillText(
+        "Unknown",
+        185,
+        840
+    );
+
+    // =========================
     // USER ID
     // =========================
-    ctx.font = "22px Arial";
+    ctx.font = `22px ${FONT}`;
     ctx.fillText(
         member.user.id,
         595,
