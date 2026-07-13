@@ -1,0 +1,19 @@
+{
+  "name": "oxm-welcome",
+  "version": "1.0.0",
+  "description": "OXM Welcome Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.2",
+    "canvas": "^3.2.3",
+    "discord.js": "^14.26.5",
+    "dotenv": "^17.4.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
