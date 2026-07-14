@@ -1,7 +1,6 @@
 const { createCanvas, loadImage, registerFont } = require("canvas");
 const path = require("path");
 
-// تسجيل خط Cairo
 registerFont(
     path.join(__dirname, "../assets/Cairo-Regular.ttf"),
     {
@@ -9,18 +8,24 @@ registerFont(
     }
 );
 
+const FONT = "Cairo";
+
 module.exports = async (member) => {
     const canvas = createCanvas(1536, 1024);
     const ctx = canvas.getContext("2d");
 
-    // الخلفية
+    // =========================
+    // Background
+    // =========================
     const background = await loadImage(
         path.join(__dirname, "../assets/background.png")
     );
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-    // الصورة الشخصية
+    // =========================
+    // Avatar
+    // =========================
     const avatar = await loadImage(
         member.user.displayAvatarURL({
             extension: "png",
@@ -59,25 +64,31 @@ module.exports = async (member) => {
     ctx.restore();
 
     // =========================
-    // الخط
+    // Text Style
     // =========================
-    const FONT = "Cairo";
-
     ctx.fillStyle = "#FFFFFF";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.shadowColor = "#A020F0";
     ctx.shadowBlur = 20;
 
-    // MEMBER
-    ctx.font = `bold 30px ${FONT}`;
-    ctx.fillText(
-        member.displayName || member.user.globalName || member.user.username,
-        185,
-        500
-    );
+    // اسم العضو
+    const username =
+        member.user.globalName ||
+        member.displayName ||
+        member.user.username;
 
+    // =========================
+    // MEMBER
+    // =========================
+    ctx.font = `bold 28px ${FONT}`;
+    ctx.direction = "rtl";
+    ctx.fillText(username, 185, 500);
+    ctx.direction = "ltr";
+
+    // =========================
     // ACCOUNT CREATED
+    // =========================
     ctx.font = `28px ${FONT}`;
     ctx.fillText(
         member.user.createdAt.toLocaleDateString("en-GB"),
@@ -85,28 +96,36 @@ module.exports = async (member) => {
         500
     );
 
+    // =========================
     // JOINED SERVER
+    // =========================
     ctx.fillText(
         member.joinedAt.toLocaleDateString("en-GB"),
         185,
         670
     );
 
+    // =========================
     // MEMBER COUNT
+    // =========================
     ctx.fillText(
         `#${member.guild.memberCount}`,
         595,
         670
     );
 
+    // =========================
     // INVITED BY
+    // =========================
     ctx.fillText(
-        "Unknown",
+        "Fawaz",
         185,
         840
     );
 
+    // =========================
     // USER ID
+    // =========================
     ctx.font = `22px ${FONT}`;
     ctx.fillText(
         member.user.id,
